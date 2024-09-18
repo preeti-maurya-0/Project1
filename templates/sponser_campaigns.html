@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Sponser Campaign</title>
+</head>
+<body>
+    <div id="main">
+        <div id="canvas">
+          <div class="navbar">
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                <div class="container-fluid">
+                  {{sponser.sponser_company_name}}
+                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    
+                  </button>
+                  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div style="text-align: right;">
+                    <ul  class="navbar-nav me-auto mb-2 mb-lg-0">
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/sponser_profile/{{sponser_id}}">Profile</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/sponser_dashboard/{{sponser_id}}">Dashboard</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/sponser_find/{{sponser_id}}">Find</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/sponser_summary/{{sponser_id}}">Stats</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/login">Logout</a>
+                      </li>
+                     
+                   
+                    </ul>
+                   
+                     </div>
+                    
+                  </div>
+                </div>
+               
+              </nav>
+            
+
+            </div>
+           
+            
+            {%if campaigns%}
+           
+            <h2> Private Campaigns</h2>
+            {%for campaign in campaigns%}
+            {%if campaign.visibility==1%}
+            <div class="container" style="gap: 20px;">
+             
+                <div class="row">
+                  
+                    <!-- private campaign visibility-->
+                  <div class="col">
+                    <div class="card" style="width: 80%;">
+                        <div class="card-body" style="background-color: #efddc1; border-radius: 0.5%; border-width: 10%; border-color: black;">
+                          
+                          <a class="card-title" href="">{{campaign.id}}</a>
+                          <h6 style="background-color: rgb(249, 246, 241); color: black; font-weight: 700;" class="card-subtitle mb-2 text-muted">{{campaign.c_name}}
+                            <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editcampaignModal" data-val="{{campaign.id}}#{{campaign.c_name}}#{{campaign.visibility}}#{{campaign.description}}#{{campaign.budget}}#{{campaign.start_date}}#{{campaign.end_date}}#{{campaign.no_of_ads}}#{{campaign.progress}}#{{campaign.goal}}">Update Campaign</button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deletecampaignModal" data-val="{{campaign.id}}#{{campaign.c_name}}#{{campaign.visibility}}#{{campaign.description}}#{{campaign.budget}}#{{campaign.start_date}}#{{campaign.end_date}}#{{campaign.no_of_ads}}#{{campaign.progress}}#{{campaign.goal}}">Delete Campaign</button> -->
+                          <a href="#" type="button" class="btn" id="edit_button" data-bs-toggle="modal" data-bs-target="#editcampaignModal" data-val="{{campaign.id}}#{{campaign.c_name}}#{{campaign.visibility}}#{{campaign.description}}#{{campaign.budget}}#{{campaign.start_date}}#{{campaign.end_date}}#{{campaign.no_of_ads}}#{{campaign.progress}}#{{campaign.goal}}#{{campaign.niche}}"><img src="/static/img/icons8-edit-30.png"></a>|
+                          <a href="#" type="button" class="btn" id="delete_button" data-bs-toggle="modal" data-bs-target="#deletecampaignModal" data-val="{{campaign.id}}#{{campaign.c_name}}#{{campaign.visibility}}#{{campaign.description}}#{{campaign.budget}}#{{campaign.start_date}}#{{campaign.end_date}}#{{campaign.no_of_ads}}#{{campaign.progress}}#{{campaign.goal}}#{{campaign.niche}}"><img src="/static/img/icons8-delete-30.png"></a>
+                          </h6>
+                          
+                          <h6 class="headings">Ad Requests</h6>
+                          {%if campaign.sponser_ads%}
+                            <table class="table">
+                              <thead class="table-dark">
+                                <tr>
+                                  <th scope="col">Ad Request Id</th>
+                                  <th scope="col">Influencer Id</th>
+                                  <th scope="col">Influencer Name</th>
+                                  <th scope="col">status</th>
+                                  <th scope="col">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for ad in campaign.sponser_ads %}
+                                <tr>
+                                  <th scope="row">{{ad.id}}</th>
+                                  <td>{{ad.influencer.id}}</td>
+                                  <td>{{ad.influencer.influencer_name}}</td>
+                                  <td><button type="button" class="btn btn-primary">{{ad.ad_request_status}}</button></td>
+                                  <td><button type="button" class="btn btn-danger" id="delete_button" data-bs-toggle="modal" data-bs-target="#deleterequestModal" data-val="{{ad.id}}#{{ad.send_by}}#{{ad.msg}}#{{ad.requirements}}#{{ad.payment_amount}}#{{ad.ad_request_status}}#{{ad.influencer_id}}#{{ad.campaign_id}}">Cancel</button>||
+                                      <button type="button" class="btn btn-warning" id="modify_button" data-bs-toggle="modal" data-bs-target="#modifyrequestModal" data-val="{{ad.id}}#{{ad.send_by}}#{{ad.msg}}#{{ad.requirements}}#{{ad.payment_amount}}#{{ad.ad_request_status}}#{{ad.influencer_id}}#{{ad.campaign_id}}">View</button>||
+                                      <button type="button" class="btn btn-success" id="modify_button" data-bs-toggle="modal" data-bs-target="#modifyrequestModal" data-val="{{ad.id}}#{{ad.send_by}}#{{ad.msg}}#{{ad.requirements}}#{{ad.payment_amount}}#{{ad.ad_request_status}}#{{ad.influencer_id}}#{{ad.campaign_id}}">Modify</button></td>
+                                       {{msg}}
+                                    </tr>
+                              </tbody>
+                              {%endfor%}
+                            </table>
+                            {%else%}
+                            <P>No ad request available!!</P>
+                            {%endif%}
+                            <a href="" type="button" class="btn" id="delete_button" data-bs-toggle="modal" data-bs-target="#addrequestModal" data-val="{{campaign.id}}#0">Add Request+</a>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                </div>
+                
+                {%endif%}
+                {%endfor%}
+                <h2>Public Campaigns</h2>
+                {%for campaign in campaigns%}
+                {%if campaign.visibility==0%}
+                <div class="container">
+                  
+                    <div class="row">
+                      
+                        <!-- private campaign visibility-->
+                      <div class="col">
+                        <div class="card" style="width: 80%;">
+                            <div class="card-body" style="background-color: #efddc1; border-radius: 0.5%; border-width: 10%; border-color: black;">
+                              
+                              <a class="card-title" href="">{{campaign.id}}</a>
+                              <h6 style="background-color: rgb(249, 246, 241); color: black; font-weight: 700;" class="card-subtitle mb-2 text-muted">{{campaign.c_name}}
+                                <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editcampaignModal" data-val="{{campaign.id}}#{{campaign.c_name}}#{{campaign.visibility}}#{{campaign.description}}#{{campaign.budget}}#{{campaign.start_date}}#{{campaign.end_date}}#{{campaign.no_of_ads}}#{{campaign.progress}}#{{campaign.goal}}">Update Campaign</button>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deletecampaignModal" data-val="{{campaign.id}}#{{campaign.c_name}}#{{campaign.visibility}}#{{campaign.description}}#{{campaign.budget}}#{{campaign.start_date}}#{{campaign.end_date}}#{{campaign.no_of_ads}}#{{campaign.progress}}#{{campaign.goal}}">Delete Campaign</button> -->
+                              <a href="#" type="button" class="btn" id="edit_button" data-bs-toggle="modal" data-bs-target="#editcampaignModal" data-val="{{campaign.id}}#{{campaign.c_name}}#{{campaign.visibility}}#{{campaign.description}}#{{campaign.budget}}#{{campaign.start_date}}#{{campaign.end_date}}#{{campaign.no_of_ads}}#{{campaign.progress}}#{{campaign.goal}}#{{campaign.niche}}"><img src="/static/img/icons8-edit-30.png"></a>|
+                              <a href="#" type="button" class="btn" id="delete_button" data-bs-toggle="modal" data-bs-target="#deletecampaignModal" data-val="{{campaign.id}}#{{campaign.c_name}}#{{campaign.visibility}}#{{campaign.description}}#{{campaign.budget}}#{{campaign.start_date}}#{{campaign.end_date}}#{{campaign.no_of_ads}}#{{campaign.progress}}#{{campaign.goal}}#{{campaign.niche}}"><img src="/static/img/icons8-delete-30.png"></a>
+                              </h6>
+                              
+                              <h6 class="headings">Ad Requests</h6>
+                              {%if campaign.sponser_ads%}
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th scope="col">Ad Request Id</th>
+                                  <th scope="col">Influencer Id</th>
+                                  <th scope="col">Ad status</th>
+                                  <th scope="col">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for ad in campaign.sponser_ads %}
+                                <tr>
+                                  <th scope="row">{{ad.id}}</th>
+                                  <td>{{ad.influencer.id}}</td>
+                                  <td>{{ad.ad_request_status}}</td>
+                                  <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nviewadModal" data-val="{{ad.id}}#{{ad.msg}}#{{ad.requirements}}#{{ad.payment_amount}}#{{ad.influencer_id}}#{{ad.campaign_id}}">View</button>||
+                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#nacceptadModal" data-val="{{ad.id}}#{{ad.msg}}#{{ad.requirements}}#{{ad.payment_amount}}#{{ad.influencer_id}}#{{ad.campaign_id}}">Accept</button>||
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#nrejectadModal" data-val="{{ad.id}}#{{ad.msg}}#{{ad.requirements}}#{{ad.payment_amount}}#{{ad.influencer_id}}#{{ad.campaign_id}}">Reject</button></td>
+                             </tr>
+                              </tbody>
+                              {%endfor%}
+                            </table>
+                            {%else%}
+                            <P>No ad request available!!</P>
+
+                            {%endif%}
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                    
+                    </div>
+                  {%endif%}
+                  {%endfor%}
+              {%else%}
+              <p>No campaign are available</p>
+              {%endif%}
+
+              <div class="d-flex justify-content-md-center">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newcampaignModal">
+                Add New Campaign
+              </button>
+            </div>
+
+
+
+<!-- campaign modals -->
+
+
+
+
+              <!-- create Modal -->
+            <form action="/add_campaign/{{sponser_id}}" method="POST">
+              <div class="modal fade" id="newcampaignModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">New Campaign</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <label for="campaignname" class="form-label">Campaign Name</label>
+                      <input type="text" class="form-control" id="campaign_name" placeholder="campaign_name" name="campaign_name" required>
+                      <label for="visibility" class="form-label">Visibility</label>
+                      <input type="number" class="form-control" id="visibility" placeholder="0 for public ,1 for private" name="visibility" required>
+                      <label for="description" class="form-label">Description</label>
+                      <input type="text" class="form-control" id="description" placeholder="Description" name="description" required>
+                      <label for="budget" class="form-label">Budget</label>
+                      <input type="number" class="form-control" id="budget" placeholder="budget" name="budget" required>
+                      <label for="start_date" class="form-label">Start date</label>
+                      <input type="date" class="form-control" id="start_date" placeholder="Start Date" name="start_date" required>
+                      <label for="end_date" class="form-label">End date</label>
+                      <input type="date" class="form-control" id="end_date" placeholder="end Date" name="end_date" required>
+                      <label for="No of Ads" class="form-label">No of Ads</label>
+                      <input type="number" class="form-control" id="no_of_ads" placeholder="No. of Ads" name="no_of_ads" required>
+                      <label for="Progress" class="form-label">Progress</label>
+                      <input type="number" class="form-control" id="progress" placeholder="Progress" name="progress" required>
+                      <label for="Goal" class="form-label">Goal</label>
+                      <input type="text" class="form-control" id="goal" placeholder="Goal" name="goal">
+                      <label for="Niche" class="form-label">Niche</label>
+                      <input type="text" class="form-control" id="niche" placeholder="Niche" name="niche">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+               <!--create Modal end-->
+               <!-- edit Modal -->
+            <form action="/edit_campaign/{{sponser_id}}" method="POST">
+              <div class="modal fade" id="editcampaignModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Edit campaign</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <input type="number" class="form-control" name="campaign_id" id="campaign_id" readonly>
+                      <label for="campaignname" class="form-label">Campaign Name</label>
+                      <input type="text" class="form-control" id="campaign_name" placeholder="campaign_name" name="campaign_name" required>
+                      <label for="visibility" class="form-label">Visibility</label>
+                      <input type="number" class="form-control" id="visibility" placeholder="0 for public ,1 for private" name="visibility" required>
+                      <label for="description" class="form-label">Description</label>
+                      <input type="text" class="form-control" id="description" placeholder="Description" name="description">
+                      <label for="budget" class="form-label">Budget</label>
+                      <input type="number" class="form-control" id="budget" placeholder="budget" name="budget" required>
+                      <label for="start_date" class="form-label">Start date</label>
+                      <input type="date" class="form-control" id="start_date" placeholder="Start Date" name="start_date" required>
+                      <label for="end_date" class="form-label">End date</label>
+                      <input type="date" class="form-control" id="end_date" placeholder="end Date" name="end_date" required>
+                      <label for="No of Ads" class="form-label">No of Ads</label>
+                      <input type="number" class="form-control" id="no_of_ads" placeholder="No. of Ads" name="no_of_ads" required>
+                      <label for="Progress" class="form-label">Progress</label>
+                      <input type="number" class="form-control" id="progress" placeholder="progress" name="progress">
+                      <label for="Goal" class="form-label">Goal</label>
+                      <input type="text" class="form-control" id="goal" placeholder="goal" name="goal">
+                      <label for="Niche" class="form-label">Niche</label>
+                      <input type="text" class="form-control" id="niche" placeholder="Niche" name="niche">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-success">Save changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+               
+               <script>
+                $("#editcampaignModal").on("show.bs.modal", function(event){
+                  var st=$(event.relatedTarget).data('val');
+                  var values=st.split('#');
+                  $(this).find('#campaign_id').val(values[0]);
+                  $(this).find('#campaign_name').val(values[1]);
+                  $(this).find('#visibility').val(values[2]);
+                  $(this).find('#description').val(values[3]);
+                  $(this).find('#budget').val(values[4]);
+                  $(this).find('#start_date').val(values[5]);
+                  $(this).find('#end_date').val(values[6]);
+                  $(this).find('#no_of_ads').val(values[7]);
+                  $(this).find('#progress').val(values[8]);
+                  $(this).find('#goal').val(values[9]);
+                  $(this).find('#niche').val(values[10]);
+                });
+              </script>
+              <!--edit Modal end -->
+
+               <!--delete Modal  -->
+            <form action="/delete_campaign/{{sponser_id}}" method="POST">
+              <div class="modal fade" id="deletecampaignModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Delete Campaign</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <input type="number" class="form-control" name="campaign_id" id="campaign_id" hidden>
+                      <label for="campaignname" class="form-label">Campaign Name</label>
+                      <input type="text" class="form-control" id="campaign_name" placeholder="campaign_name" name="campaign_name" readonly>
+                      <label for="visibility" class="form-label">Visibility</label>
+                      <input type="number" class="form-control" id="visibility" placeholder="0 for public ,1 for private" name="visibility" readonly>
+                      <label for="description" class="form-label">Description</label>
+                      <input type="text" class="form-control" id="description" placeholder="Description" name="description" readonly>
+                      <label for="budget" class="form-label">Budget</label>
+                      <input type="number" class="form-control" id="budget" placeholder="budget" name="budget" readonly>
+                      <label for="start_date" class="form-label">Start date</label>
+                      <input type="date" class="form-control" id="start_date" placeholder="Start Date" name="start_date" readonly>
+                      <label for="end_date" class="form-label">End date</label>
+                      <input type="date" class="form-control" id="end_date" placeholder="end Date" name="end_date" readonly>
+                      <label for="No of Ads" class="form-label">No of Ads</label>
+                      <input type="number" class="form-control" id="no_of_ads" placeholder="No. of Ads" name="no_of_ads" rreadonly>
+                      <label for="Progress" class="form-label">Progress</label>
+                      <input type="number" class="form-control" id="progress" placeholder="progress" name="progress" readonly>
+                      <label for="Goal" class="form-label">Goal</label>
+                      <input type="text" class="form-control" id="goal" placeholder="goal" name="goal" readonly>
+                      <label for="Niche" class="form-label">Niche</label>
+                      <input type="text" class="form-control" id="niche" placeholder="Niche" name="niche" readonly>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <script>
+              $("#deletecampaignModal").on("show.bs.modal", function(event){
+                var st=$(event.relatedTarget).data('val');
+                var values=st.split('#');
+                $(this).find('#campaign_id').val(values[0]);
+                $(this).find('#campaign_name').val(values[1]);
+                $(this).find('#visibility').val(values[2]);
+                $(this).find('#description').val(values[3]);
+                $(this).find('#budget').val(values[4]);
+                $(this).find('#start_date').val(values[5]);
+                $(this).find('#end_date').val(values[6]);
+                $(this).find('#no_of_ads').val(values[7]);
+                $(this).find('#progress').val(values[8]);
+                $(this).find('#goal').val(values[9]);
+                $(this).find('#niche').val(values[10]);
+              });
+            </script>
+
+               <!--delete Modal end -->
+<!-- campaign modals end here -->
+
+
+
+
+<!-- Ads modals starts here -->
+
+<!-- create ad request model  -->
+<form action="/send_request/{{sponser_id}}" method="POST">
+  <div class="modal fade" id="addrequestModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Ad request</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="number" class="form-control" name="campaign_id" id="campaign_id" hidden>
+          <input type="number" class="form-control" name="send_by" id="send_by" hidden>
+          <label for="msg" class="form-label">Message</label>
+          <input type="text" class="form-control" id="msg" placeholder="type-message" name="msg">
+          <label for="requirements" class="form-label">Requirements</label>
+          <input type="text" class="form-control" id="requirements" placeholder="state your requirements" name="requirements" required>
+          <label for="payment_amount" class="form-label">Payment-Amount</label>
+          <input type="number" class="form-control" id="payment_amount" placeholder="Payment" name="payment_amount" required>
+          <label for="status" class="form-label">Status</label>
+          <input type="text" class="form-control" id="status" placeholder="Ad request status" name="status">
+          <select class="form-select" aria-label="Default select example" name="influencer_id">
+            <option selected>Find Influencer</option>
+            {%for influencer in influencers %}
+            <option value="{{influencer.id}}">{{influencer.influencer_name}}</option>
+            {%endfor%}
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+  $("#addrequestModal").on("show.bs.modal", function(event){
+    var st=$(event.relatedTarget).data('val');
+    var values=st.split('#');
+    $(this).find('#campaign_id').val(values[0]);
+    $(this).find('#send_by').val(values[1]);
+  });
+</script>
+
+<!-- create ad request model  -->
+<!-- modify ad request modal-->
+<form action="/modify_request/{{sponser_id}}" method="POST">
+  <div class="modal fade" id="modifyrequestModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Ad request</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="number" class="form-control" name="ad_id" id="ad_id" hidden>
+          <input type="number" class="form-control" name="campaign_id" id="campaign_id" hidden>
+          <input type="number" class="form-control" name="send_by" id="send_by" hidden>
+          <label for="msg" class="form-label">Message</label>
+          <input type="text" class="form-control" id="msg" placeholder="type-message" name="msg">
+          <label for="requirements" class="form-label">Requirements</label>
+          <input type="text" class="form-control" id="requirements" placeholder="state your requirements" name="requirements" required>
+          <label for="payment_amount" class="form-label">Payment-Amount</label>
+          <input type="number" class="form-control" id="payment_amount" placeholder="Payment" name="payment_amount" required>
+          <label for="status" class="form-label">Status</label>
+          <input type="text" class="form-control" id="status" placeholder="Ad request status" name="status">
+          <select class="form-select" aria-label="Default select example" id="influencer_id" name="influencer_id">
+            <option selected>Find Influencer</option>
+            {%for influencer in influencers %}
+            <option value="{{influencer.id}}">{{influencer.influencer_name}}</option>
+            {%endfor%}
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Modify</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+  $("#modifyrequestModal").on("show.bs.modal", function(event){
+    var st=$(event.relatedTarget).data('val');
+    var values=st.split('#');
+    var influencerid=values[6]
+    $(this).find('#ad_id').val(values[0]);
+    $(this).find('#send_by').val(values[1]);
+    $(this).find('#msg').val(values[2]);
+    $(this).find('#requirements').val(values[3]);
+    $(this).find('#payment_amount').val(values[4]);
+    $(this).find('#status').val(values[5]);
+    $(this).find('#influencer_id').val(influencerid);
+    $(this).find('#campaign_id').val(values[7]);
+  });
+</script>
+
+<!-- modify ad request model end -->
+
+<!-- delete ad request modal-->
+<form action="/delete_request/{{sponser_id}}" method="POST">
+  <div class="modal fade" id="deleterequestModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Ad request</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="number" class="form-control" name="ad_id" id="ad_id" hidden>
+          <input type="number" class="form-control" name="campaign_id" id="campaign_id" hidden>
+          <input type="number" class="form-control" name="send_by" id="send_by" hidden>
+          <label for="msg" class="form-label">Message</label>
+          <input type="text" class="form-control" id="msg" placeholder="type-message" name="msg" readonly>
+          <label for="requirements" class="form-label">Requirements</label>
+          <input type="text" class="form-control" id="requirements" placeholder="state your requirements" name="requirements" readonly>
+          <label for="payment_amount" class="form-label">Payment-Amount</label>
+          <input type="number" class="form-control" id="payment_amount" placeholder="Payment" name="payment_amount" readonly>
+          <label for="status" class="form-label">Status</label>
+          <input type="text" class="form-control" id="status" placeholder="Ad request status" name="status" readonly>
+          <select class="form-select" aria-label="Default select example" id="influencer_id" name="influencer_id">
+            <option selected>Find Influencer</option>
+            {%for influencer in influencers %}
+            <option value="{{influencer.id}}">{{influencer.influencer_name}}</option>
+            {%endfor%}
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+  $("#deleterequestModal").on("show.bs.modal", function(event){
+    var st=$(event.relatedTarget).data('val');
+    var values=st.split('#');
+    var influencerid=values[6]
+    $(this).find('#ad_id').val(values[0]);
+    $(this).find('#send_by').val(values[1]);
+    $(this).find('#msg').val(values[2]);
+    $(this).find('#requirements').val(values[3]);
+    $(this).find('#payment_amount').val(values[4]);
+    $(this).find('#status').val(values[5]);
+    $(this).find('#influencer_id').val(influencerid);
+    $(this).find('#campaign_id').val(values[7]);
+  });
+</script>
+
+<!-- delete ad request model end -->
+
+<!-- for public campaign -->
+
+
+<!--View modal for public campaigns-->
+
+<form action="/sponser_negotiate_request/{{sponser_id}}" method="POST">
+  <div class="modal fade" id="nviewadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ad request Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="ad id" class="form-label">Ad ID</label>
+          <input type="number" class="form-control" placeholder="Ad Id" name="ad_id" id="ad_id" readonly>
+          <label for="campaign_id" class="form-label">Campaign ID</label>
+          <input type="number" class="form-control" placeholder="Campaign Id" name="campaign_id" id="campaign_id" readonly>
+          <label for="influencer_id" class="form-label">Influencer ID</label>
+          <input type="number" class="form-control" name="influencer_id" placeholder="Influencer ID" id="influencer_id" readonly>
+          <label for="msg" class="form-label">Message</label>
+          <input type="text" class="form-control" id="msg" placeholder="type-message" name="msg">
+          <label for="requirements" class="form-label">Requirements</label>
+          <input type="text" class="form-control" id="requirements" placeholder="state your requirements" name="requirements" readonly>
+          <label for="payment_amount" class="form-label">Payment-Amount</label>
+          <input type="number" class="form-control" id="payment_amount" placeholder="Payment" name="payment_amount">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Negotiate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+   
+<script>
+  $("#nviewadModal").on("show.bs.modal", function(event){
+    var st=$(event.relatedTarget).data('val');
+    var values=st.split('#');
+    $(this).find('#ad_id').val(values[0]);
+    $(this).find('#msg').val(values[1]);
+    $(this).find('#requirements').val(values[2]);
+    $(this).find('#payment_amount').val(values[3]);
+    $(this).find('#influencer_id').val(values[4]);
+    $(this).find('#campaign_id').val(values[5]);
+  });
+</script>
+
+
+<!-- modal for accepting public campaign ad request that are send by influencers request: -->
+
+<form action="/influ_accept_ad_request/{{sponser_id}}" method="POST">
+  <div class="modal fade" id="nacceptadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ad request Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="ad id" class="form-label">Ad ID</label>
+          <input type="number" class="form-control" placeholder="Ad Id" name="ad_id" id="ad_id" readonly>
+          <label for="campaign_id" class="form-label">Campaign ID</label>
+          <input type="number" class="form-control" placeholder="Campaign Id" name="campaign_id" id="campaign_id" readonly>
+          <label for="influencer_id" class="form-label">Influencer ID</label>
+          <input type="number" class="form-control" name="influencer_id" placeholder="Influencer ID" id="influencer_id" readonly>
+          <label for="msg" class="form-label">Message</label>
+          <input type="text" class="form-control" id="msg" placeholder="type-message" name="msg" readonly>
+          <label for="requirements" class="form-label">Requirements</label>
+          <input type="text" class="form-control" id="requirements" placeholder="state your requirements" name="requirements" readonly>
+          <label for="payment_amount" class="form-label">Payment-Amount</label>
+          <input type="number" class="form-control" id="payment_amount" placeholder="Payment" name="payment_amount" readonly>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success" id="acceptBtn">Accept</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+   
+<script>
+  $("#nacceptadModal").on("show.bs.modal", function(event){
+    var st=$(event.relatedTarget).data('val');
+    var values=st.split('#');
+    $(this).find('#ad_id').val(values[0]);
+    $(this).find('#msg').val(values[1]);
+    $(this).find('#requirements').val(values[2]);
+    $(this).find('#payment_amount').val(values[3]);
+    $(this).find('#influencer_id').val(values[4]);
+    $(this).find('#campaign_id').val(values[5]);
+  });
+</script>
+
+
+<!-- modal for rejecting request: -->
+
+<form action="/influ_reject_ad_request/{{sponser_id}}" method="POST">
+  <div class="modal fade" id="nrejectadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ad request Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="ad id" class="form-label">Ad ID</label>
+          <input type="number" class="form-control" placeholder="Ad Id" name="ad_id" id="ad_id" readonly>
+          <label for="campaign_id" class="form-label">Campaign ID</label>
+          <input type="number" class="form-control" placeholder="Campaign Id" name="campaign_id" id="campaign_id" readonly>
+          <label for="influencer_id" class="form-label">Influencer ID</label>
+          <input type="number" class="form-control" name="influencer_id" placeholder="Influencer ID" id="influencer_id" readonly>
+          <label for="msg" class="form-label">Message</label>
+          <input type="text" class="form-control" id="msg" placeholder="type-message" name="msg" readonly>
+          <label for="requirements" class="form-label">Requirements</label>
+          <input type="text" class="form-control" id="requirements" placeholder="state your requirements" name="requirements" readonly>
+          <label for="payment_amount" class="form-label">Payment-Amount</label>
+          <input type="number" class="form-control" id="payment_amount" placeholder="Payment" name="payment_amount" readonly>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-danger" id="rejectBtn">Reject</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+   
+<script>
+  $("#nrejectadModal").on("show.bs.modal", function(event){
+    var st=$(event.relatedTarget).data('val');
+    var values=st.split('#');
+    $(this).find('#ad_id').val(values[0]);
+    $(this).find('#msg').val(values[1]);
+    $(this).find('#requirements').val(values[2]);
+    $(this).find('#payment_amount').val(values[3]);
+    $(this).find('#influencer_id').val(values[4]);
+    $(this).find('#campaign_id').val(values[5]);
+  });
+</script>
+
+
+
+         </div>
+    </div>
